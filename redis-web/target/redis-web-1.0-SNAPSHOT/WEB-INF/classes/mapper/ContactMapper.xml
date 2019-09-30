@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.home.mapper.ContactMapper">
+    <resultMap id="BaseResultMap" type="com.home.pojo.Contact">
+        <id column="ID" jdbcType="INTEGER" property="id"/>
+        <result column="CONTACT_NAME" jdbcType="VARCHAR" property="contactName"/>
+        <result column="PHONE" jdbcType="VARCHAR" property="phone"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, CONTACT_NAME, PHONE
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from contact
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getAllCount" resultType="java.lang.Integer">
+    select count(*) from contact
+  </select>
+
+    <select id="selectByPageObject" parameterType="com.home.page.PageObject" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from contact
+        <if test="startPage != null and  pageSize != null">
+         limit #{startPage},#{pageSize}
+        </if>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from contact
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.home.pojo.Contact">
+    insert into contact (ID, CONTACT_NAME, PHONE
+      )
+    values (#{id,jdbcType=INTEGER}, #{contactName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.home.pojo.Contact">
+        insert into contact
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="contactName != null">
+                CONTACT_NAME,
+            </if>
+            <if test="phone != null">
+                PHONE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="contactName != null">
+                #{contactName,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.home.pojo.Contact">
+        update contact
+        <set>
+            <if test="contactName != null">
+                CONTACT_NAME = #{contactName,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                PHONE = #{phone,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.home.pojo.Contact">
+    update contact
+    set CONTACT_NAME = #{contactName,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
